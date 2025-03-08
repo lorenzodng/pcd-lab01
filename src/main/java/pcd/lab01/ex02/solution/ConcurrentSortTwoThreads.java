@@ -7,52 +7,33 @@ public class ConcurrentSortTwoThreads {
 	static final int VECTOR_SIZE = 400_000_000;
 	
 	public static void main(String[] args) {
-	
-		log("Generating array...");
-		var v = genArray(VECTOR_SIZE);
-		
-		log("Array generated.");
-		// dumpArray(v);
-		
-		log("Spawning workers to do sorting (" + VECTOR_SIZE + " elements)...");
-	
-		int middle = v.length/2;
-		SortingWorker w1 = new SortingWorker("worker-1", v, 0, middle - 1);
-		SortingWorker w2 = new SortingWorker("worker-2", v, middle, v.length - 1);
-		MergingWorkerTwoParts m = new MergingWorkerTwoParts("merger", v, w1, w2);
 
-		var t0 = System.currentTimeMillis();	
+		System.out.println("[ " + System.currentTimeMillis() +  " ][ " + Thread.currentThread().getName() + " ] " + "Generating array...");
+		int[] array = genArray(VECTOR_SIZE);
+
+		System.out.println("[ " + System.currentTimeMillis() +  " ][ " + Thread.currentThread().getName() + " ] " + "Array generated.");
+		System.out.println("[ " + System.currentTimeMillis() +  " ][ " + Thread.currentThread().getName() + " ] " + "Spawning workers to do sorting (" + VECTOR_SIZE + " elements)...");
+	
+		int middle = array.length/2;
+		SortingWorker w1 = new SortingWorker("worker-1", array, 0, middle);
+		SortingWorker w2 = new SortingWorker("worker-2", array, middle+1, array.length - 1);
+
+		long t0 = System.currentTimeMillis();
 		w1.start();
 		w2.start();
+		MergingWorkerTwoParts m = new MergingWorkerTwoParts("merger", array, w1, w2);
 		m.start();
-		
-		try {
-			m.join();
-			var t1 = System.currentTimeMillis();
-			log("Done. Time elapsed: " + (t1 - t0) + " ms");
-			// dumpArray(vnew);		
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		long t1 = System.currentTimeMillis();
+
+		System.out.println("[ " + System.currentTimeMillis() +  " ][ " + Thread.currentThread().getName() + " ] " + "Done. Time elapsed: " + (t1 - t0) + " ms");
 	}
 
 	private static int[] genArray(int n) {
 		Random gen = new Random(System.currentTimeMillis());
-		int v[] = new int[n];
-		for (int i = 0; i < v.length; i++) {
-			v[i] = gen.nextInt();
+		int array[] = new int[n];
+		for (int i = 0; i < array.length; i++) {
+			array[i] = gen.nextInt();
 		}
-		return v;
-	}
-	
-	private static void dumpArray(int[] v) {
-		for (int l:  v) {
-			System.out.print(l + " ");
-		}
-		System.out.println();
-	}
-
-	private static void log(String msg) {
-		System.out.println("[ " + System.currentTimeMillis() +  " ][ " + Thread.currentThread().getName() + " ] " + msg); 
+		return array;
 	}
 }

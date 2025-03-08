@@ -1,6 +1,6 @@
 package pcd.lab01.ex02.solution;
 
-public class MergingWorkerTwoParts extends AbstractWorker {
+public class MergingWorkerTwoParts extends Thread {
 	
 	private int[] array;
 	private SortingWorker w1,w2;
@@ -13,21 +13,19 @@ public class MergingWorkerTwoParts extends AbstractWorker {
 	}
 	
 	public void run() {
-		log("started merging.");
-		log("waiting for subparts to be sorted...");
 		try {
-			var t0 = System.currentTimeMillis();
 			w1.join();
 			w2.join();
-			log("subparts sorted, going to merge...");
-			var merged = this.merge(array);
-			for (int i = 0; i < merged.length; i++) {
-				array[i] = merged[i];
+			System.out.println("subparts sorted, going to merge...");
+			long t0 = System.currentTimeMillis();
+			int[] mergedArray = merge(array);
+			for(int i = 0; i < mergedArray.length; i++) {
+				array[i] = mergedArray[i];
 			}
-			var t1 = System.currentTimeMillis();
-			log("completed -- " + (t1 - t0) + " ms for merging.");
+			long t1 = System.currentTimeMillis();
+			System.out.println("completed -- " + (t1 - t0) + " ms for merging.");
 		} catch(InterruptedException ex) {
-			log("interrupted.");
+			System.out.println("interrupted.");
 		}
 	}
 	

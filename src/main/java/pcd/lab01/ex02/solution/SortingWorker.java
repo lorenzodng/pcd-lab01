@@ -2,7 +2,7 @@ package pcd.lab01.ex02.solution;
 
 import java.util.Arrays;
 
-public class SortingWorker extends AbstractWorker {
+public class SortingWorker extends Thread {
 	
 	private int[] array;
 	private int from, to;
@@ -16,8 +16,8 @@ public class SortingWorker extends AbstractWorker {
 	}
 	
 	public void run() {
-		log("started - sorting from " + from + " " + to);
+		System.out.println("[ " + System.currentTimeMillis() +  " ][ " + this.getName() + " ] " + "started - sorting from " + from + " " + to);
 		Arrays.sort(array, from, to + 1);
-		log("completed.");
+		System.out.println("[ " + System.currentTimeMillis() +  " ][ " + this.getName() + " ] " + "completed");
 	}
 }

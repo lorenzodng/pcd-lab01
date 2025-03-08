@@ -2,7 +2,7 @@ package pcd.lab01.ex02.solution;
 
 import java.util.List;
 
-public class MergingWorkerGeneral extends AbstractWorker {
+public class MergingWorkerGeneral extends Thread {
 	
 	private int[] array;
 	private List<SortingWorker> workers;
@@ -15,34 +15,31 @@ public class MergingWorkerGeneral extends AbstractWorker {
 	
 	public void run() {
 		int nParts = workers.size();
-		log("started - merging " + nParts +" parts");
-		log("waiting for subparts to be sorted...");
 		try {
-			for (var w1: workers) {
-				w1.join();
+			for (SortingWorker w: workers) {
+				w.join();
 			}
-			log("subparts sorted, going to merge...");
-			
+			System.out.println("[ " + System.currentTimeMillis() +  " ][ " + this.getName() + " ] " + "subparts sorted, going to merge...");
 			long t0 = System.currentTimeMillis();
-			int[] merged = this.merge(array, nParts);
+			int[] merged = merge(array, nParts);
 			for (int i = 0; i < merged.length; i++) {
 				array[i] = merged[i];
 			}
 			long t1 = System.currentTimeMillis();
-			log("completed -- " + (t1 - t0) + " ms for merging.");
+			System.out.println("[ " + System.currentTimeMillis() +  " ][ " + this.getName() + " ] " + "completed -- " + (t1 - t0) + " ms for merging.");
 		} catch(InterruptedException ex) {
-			log("exception.");
+			System.out.println("interrupted.");
 		}
 	}
 	
 	private int[] merge(int[] v, int nParts) {
-		var vnew = new int[v.length];
+		int[] vnew = new int[v.length];
 
 		int partSize = v.length/nParts;
 		int from = 0; 
 
-		var indexes = new int[nParts];
-		var max = new int[nParts];
+		int[] indexes = new int[nParts];
+		int[] max = new int[nParts];
 		for (int i = 0; i < indexes.length - 1; i++) {
 			indexes[i] = from;
 			max[i] = from + partSize;
