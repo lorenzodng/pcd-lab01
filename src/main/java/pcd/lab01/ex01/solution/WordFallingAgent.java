@@ -6,32 +6,28 @@ import pcd.lab01.ex01.*;
 public class WordFallingAgent extends Thread {
 	
 	private String word;
-	private int startLine, startColumn, endLine;
+	private int startRow, startColumn, endRow;
 	private long delay;
 	
-	public WordFallingAgent(String word, int startLine, int startColumn, int endLine, 
-							long delay) {
+	public WordFallingAgent(String word, int startRow, int startColumn, int endRow, long delay) {
 		this.word = word;
-		this.startLine = startLine;
+		this.startRow = startRow;
 		this.startColumn = startColumn;
-		this.endLine = endLine;
+		this.endRow = endRow;
 		this.delay = delay;
 	}
 	
 	public void run() {
 		Screen sc = Screen.getInstance();
-		int line = startLine;
-		String blankString = makeBlank(word.length());
-		
-		while (line < endLine) {
-			sc.writeStringAt(line, startColumn, Color.YELLOW, word);
-
-			delay(delay);
-			sc.writeStringAt(line, startColumn, Color.WHITE, blankString);
-			line++;
+		while (startRow < endRow) {
+			sc.writeStringAt(startRow, startColumn, Color.YELLOW, word);
+			try {
+				Thread.sleep(delay);
+			} catch (Exception ex) {}
+			sc.writeStringAt(startRow, startColumn, Color.WHITE, makeBlank(word.length()));
+			startRow++;
 			
 		}
-		sc.writeStringAt(line, startColumn, Color.YELLOW, word);
 	}
 
 	private String makeBlank(int len) {
@@ -40,11 +36,5 @@ public class WordFallingAgent extends Thread {
 			sb.append(" ");
 		}
 		return sb.toString();
-	}
-	
-	private void delay(long dt) {
-		try {
-			Thread.sleep(dt);
-		} catch (Exception ex) {}
 	}
 }
