@@ -14,24 +14,22 @@ public class MergingWorkerGeneral extends Thread {
 	}
 	
 	public void run() {
-		int nParts = workers.size();
 		try {
-			for (SortingWorker w: workers) {
-				w.join();
+			for (SortingWorker w: workers) { //per ogni thread della lista "workers"
+				w.join(); //aspetto che ognuno abbia terminato l'ordinamento
 			}
 			System.out.println("[ " + System.currentTimeMillis() +  " ][ " + this.getName() + " ] " + "subparts sorted, going to merge...");
 			long t0 = System.currentTimeMillis();
-			int[] merged = merge(array, nParts);
-			for (int i = 0; i < merged.length; i++) {
-				array[i] = merged[i];
-			}
+			int nParts = workers.size();
+			array = merge(array, nParts); //ordino le diverse parti dell'array (già ordinate a loro volta), ottenendo un array completamente ordinato
 			long t1 = System.currentTimeMillis();
 			System.out.println("[ " + System.currentTimeMillis() +  " ][ " + this.getName() + " ] " + "completed -- " + (t1 - t0) + " ms for merging.");
 		} catch(InterruptedException ex) {
 			System.out.println("interrupted.");
 		}
 	}
-	
+
+	//metodo standard per ordinare più parti ordinate di un array
 	private int[] merge(int[] v, int nParts) {
 		int[] vnew = new int[v.length];
 

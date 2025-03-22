@@ -4,7 +4,7 @@ import static org.fusesource.jansi.Ansi.ansi;
 
 import org.fusesource.jansi.AnsiConsole;
 import org.fusesource.jansi.Ansi.Color;
-
+//classe con metodi standard per scrivere e cancellare tutto il testo sullo schermo
 public class Screen {
 	
 	private static Screen instance = null;
@@ -21,17 +21,17 @@ public class Screen {
 	protected Screen() {
 		AnsiConsole.systemInstall();
 	}
-	
-	public void clear() {
-		synchronized (this) {
-			System.out.println( ansi().eraseScreen().reset());
-		}		
-	}
-	
+
 	public void writeStringAt(int line, int column, Color color, String msg) {
 		synchronized (this) {
-			System.out.println( ansi().cursor(line,column).fg(color).a(msg).reset() );
+			System.out.println(ansi().cursor(line,column).fg(color).a(msg).reset());
 		}
 	}
-	
+
+	public void clear() {
+		synchronized (this) {
+			System.out.println(ansi().eraseScreen().reset());
+		}		
+	}
+
 }

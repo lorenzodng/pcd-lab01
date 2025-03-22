@@ -14,21 +14,19 @@ public class MergingWorkerTwoParts extends Thread {
 	
 	public void run() {
 		try {
-			w1.join();
-			w2.join();
+			w1.join(); //aspetto che il primo thread abbia terminato l'ordinamento
+			w2.join(); //aspetto che il secondo thread abbia terminato l'ordinamento
 			System.out.println("subparts sorted, going to merge...");
 			long t0 = System.currentTimeMillis();
-			int[] mergedArray = merge(array);
-			for(int i = 0; i < mergedArray.length; i++) {
-				array[i] = mergedArray[i];
-			}
+			array = merge(array); //ordino le due parti dell'array (già ordinate a loro volta), ottenendo un array completamente ordinato
 			long t1 = System.currentTimeMillis();
 			System.out.println("completed -- " + (t1 - t0) + " ms for merging.");
 		} catch(InterruptedException ex) {
 			System.out.println("interrupted.");
 		}
 	}
-	
+
+	//metodo standard per ordinare due parti di un array
 	private int[] merge(int[] v) {
 		int[] vnew = new int[v.length];
 		int i1 = 0;
